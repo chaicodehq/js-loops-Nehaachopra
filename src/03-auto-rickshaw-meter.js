@@ -33,4 +33,22 @@
  */
 export function calculateAutoFare(distance, waitingMinutes = 0) {
   // Your code here
+  if (Number.isNaN(Number(distance)) || Number.isNaN(Number(waitingMinutes)) === NaN|| distance <= 0 || waitingMinutes < 0) return -1
+
+  let fare = 0;
+  let roundedDistance = Math.ceil(distance) + 1;
+
+  for (let i = 1; i < roundedDistance; i++) {
+    if (i === 1) fare += 30
+    else if (i > 1 && i < 6) fare += 15
+    else fare += 10
+  }
+  if (waitingMinutes > 0) {
+    let roundedWaitingMinutes = Math.ceil(waitingMinutes);
+    if (roundedWaitingMinutes % 2 !== 0) roundedWaitingMinutes ++;
+    roundedWaitingMinutes = roundedWaitingMinutes / 2;
+    fare += 5 * roundedWaitingMinutes;
+  }
+  return fare;
 }
+const timeTaken = "00:08:38";
