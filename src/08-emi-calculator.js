@@ -43,4 +43,32 @@
  */
 export function calculateEMI(principal, monthlyRate, emi) {
   // Your code here
+  if (Number.isNaN(Number(principal)) || Number.isNaN(Number(monthlyRate)) || Number.isNaN(Number(emi)) || principal <=0 || monthlyRate <= 0 || emi <= 0 || emi <= principal * monthlyRate) return { months: -1, totalPaid: -1, totalInterest: -1 }
+
+  let months = 0;
+  let totalPaid = 0;
+  let totalInterest = 0;
+
+  while (principal > 0) {
+    months++;
+
+    const interest = roundTo2(principal * monthlyRate * 1);
+    principal += interest;
+    totalInterest += interest;
+
+    if (principal < emi) {
+      totalPaid += principal;
+      principal = 0;
+    }
+    else {
+      totalPaid += emi;
+      principal -= emi;
+    }
+  }
+
+  return { months, totalPaid, totalInterest}
+}
+
+function roundTo2(num) {
+  return Math.round(num * 100) / 100;
 }
