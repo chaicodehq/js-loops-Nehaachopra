@@ -38,4 +38,55 @@
  */
 export function iplPointsTable(matches) {
   // Your code here
+  let organizedArray = [];
+  if (!Array.isArray(matches) || matches.length === 0) return []
+
+  for (let match of matches) {
+    const result = match.result;
+    let currentTeam;
+
+    if (result === "win") {
+      //winner details update
+      currentTeam = match.winner;
+      updateTeamsArray(currentTeam, organizedArray, result);
+
+      //looser details update
+      currentTeam = match.team1 === currentTeam ? match.team2 : match.team1;
+      updateTeamsArray(currentTeam, organizedArray, "loose");
+    }
+    else {
+      currentTeam = match.team1;
+      updateTeamsArray(currentTeam, organizedArray, result);
+
+      currentTeam = match.team2;
+      updateTeamsArray(currentTeam, organizedArray, result);
+    }
+  }
+
+  organizedArray.sort((a,b) => b.points - a.points || a.team.localeCompare(b.team));
+
+  return organizedArray;
+}
+
+function updateTeamsArray(teamName, teamsArray, result) {
+  let targetRow = teamsArray.find(teamR => teamR.team === teamName);
+  if (!targetRow) {
+    targetRow = {team: teamName, points: 0, played: 0, won: 0, lost: 0, tied: 0, noResult: 0};
+    teamsArray.push(targetRow);
+  }
+
+  targetRow.played ++;
+  if (result === "win") {
+    targetRow.won ++;
+    targetRow.points += 2;
+  }
+  else if (result === "tie") {
+    targetRow.tied++;
+    targetRow.points += 1;
+  }
+  else if (result === "no_result") {
+    targetRow.noResult++;
+    targetRow.points += 1;
+  }
+  else targetRow.lost++
 }
