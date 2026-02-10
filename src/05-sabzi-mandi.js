@@ -31,4 +31,24 @@
  */
 export function sabziMandiBill(shoppingList, priceList) {
   // Your code here
+  if (!Array.isArray(shoppingList) || typeof priceList !== "object") {
+    return { items: [], totalBill: 0 };
+  }
+
+  const items = [];
+  let billAmt = 0;
+
+  shoppingList.forEach((item) => {
+    const name = item.name;
+    const price = priceList[name];
+    
+    if (price && price <= 80) {
+      const qty = item.qty
+      const cost = Math.round((qty * price) * 100)/100;
+      items.push({name, qty, cost})
+      billAmt += Math.round(cost*100)/100;
+    }
+  })
+
+  return {"items": items, "totalBill": billAmt}
 }
