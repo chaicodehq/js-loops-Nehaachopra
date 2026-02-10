@@ -14,14 +14,14 @@
  *
  * Rules:
  *   Step 1 - Use for...of to loop through lightStrings and add ALL of them
- *     to selected list with their cost calculated
+ *     to selected list with their totalCost calculated
  *   Step 2 - Use a while loop to check: agar totalCost > budget, toh remove
- *     the LAST item from selected, subtract its cost, and keep removing until
+ *     the LAST item from selected, subtract its totalCost, and keep removing until
  *     totalCost <= budget
  *
  * @param {Array<{color: string, length: number}>} lightStrings - Available light strings
  * @param {number} budget - Sharma ji ka budget in rupees
- * @returns {{ selected: Array<{color: string, length: number, cost: number}>, totalLength: number, totalCost: number }}
+ * @returns {{ selected: Array<{color: string, length: number, totalCost: number}>, totalLength: number, totalCost: number }}
  *
  * Validation:
  *   - Agar lightStrings array nahi hai ya budget positive number nahi hai,
@@ -35,8 +35,33 @@
  *   // golden: 5*50=250, white: 10*30=300, multicolor: 3*40=120
  *   // Total = 670 > 400, remove multicolor (670-120=550), still > 400,
  *   // remove white (550-300=250), 250 <= 400
- *   // => { selected: [{ color: "golden", length: 5, cost: 250 }], totalLength: 5, totalCost: 250 }
+ *   // => { selected: [{ color: "golden", length: 5, totalCost: 250 }], totalLength: 5, totalCost: 250 }
  */
 export function diwaliLightsPlan(lightStrings, budget) {
   // Your code here
+  if (!Array.isArray(lightStrings) || Number.isNaN(Number(budget)) || budget <= 0 || lightStrings.length < 1) return { selected: [], totalLength: 0, totalCost: 0 }
+
+  let totalCost = 0;
+  let totalLength = 0;
+  let selected= [];
+
+  for (let lightString of lightStrings) {
+    const {color, length} = lightString;
+    let subTotal;
+
+    if (color === "golden") subTotal = length * 50;
+    else if (color === "multicolor") subTotal = length * 40
+    else if (color === "white") subTotal = length * 30
+    else subTotal = length * 35
+
+    
+    if (totalCost + subTotal > budget) break; 
+    
+    totalCost += subTotal;
+    totalLength += length;
+
+    selected.push({color, length, "cost": subTotal});
+  }
+
+  return {selected, totalLength, totalCost}
 }
