@@ -37,4 +37,26 @@
  */
 export function rangoli(n) {
   // Your code here
+  if (!Number.isInteger(n) || n < 1) return []
+
+  const finalArray = [];
+  const width = 2 * n - 1;
+
+  for (let row = 0; row < n; row ++) {
+    const startColumn = n - row - 1;
+
+    //leading spaces
+    let pattern = Array(startColumn).fill(" ");
+    
+    //dot pattern
+    let dotPattern = Array(row + 1).fill("*").join(" ");
+
+    pattern.push(dotPattern);
+    finalArray.push(pattern.join(""));
+  }
+  
+  for (let row = n - 2; row > -1; row--) {
+    finalArray.push(finalArray[row]);
+  }
+  return finalArray;
 }
